@@ -1,14 +1,13 @@
 #ifndef IRREGULARGRID2D_H_
 #define IRREGULARGRID2D_H_
 
+#ifdef __cplusplus
 extern "C" {
-  #include "postgres.h"
-  //#include "geos_c.h"
+#endif
+#include "postgres.h"
+#ifdef __cplusplus
 }
-
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#endif
 
 #ifndef MAX
 #define MAX( a, b ) ((a) > (b) ? (a) : (b))
@@ -16,6 +15,25 @@ extern "C" {
 #ifndef MIN
 #define MIN( a, b ) ((a) < (b) ? (a) : (b))
 #endif
+
+//Represents a point of a rectangle corner
+typedef struct {
+  double x;
+  double y;
+} RPoint;
+
+// struct for passing getCellnos result to postgres
+typedef struct {
+    int* res;
+    long unsigned int res_size;
+} ARInfo;
+
+
+#ifdef __cplusplus
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <tuple>
 
 template <unsigned dim>
 class Rectangle;
@@ -103,19 +121,6 @@ class Rectangle {
     double min[dim];
     double max[dim];
 };
-
-//Represents a point of a rectangle corner
-struct RPoint {
-  double x;
-  double y;
-};
-
-// struct for passing getCellnos result to postgres
-struct ARInfo {
-    int* res;
-    long unsigned int res_size;
-};
-
 // Represents a row cell as rectangle
 /* struct CellInfo {
   int cellId;
@@ -165,10 +170,7 @@ class IrregularGrid2D {
     static void outTxtPsql(std::string txt_str) {
       if (!txt_str.empty()) {
         txt_str += "\n";
-
-        char* char_arr;
-        char_arr = &txt_str[0];
-        elog(INFO, char_arr);
+        elog(INFO, "Info: %s", txt_str.c_str());
       }
     }
 
@@ -197,20 +199,22 @@ class IrregularGrid2D {
   void processInput();
   void buildGrid();
 };
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 void* initIrgrid2D(double l, double r, double b, double t,
   int row_count, int cell_count, char *conn_str, char *rel_str);
+
 void destroyIrregularGrid2D( void *irgrid2d );
+
 bool createIrgrid2D( void *irgrid2d );
+
 ARInfo getCellnos(void *irgrid2d, double r_l, double r_r, double r_b,
  double r_t, char *conn_str);
-
 #ifdef __cplusplus
-}; /* extern "C" */
+}; 
 #endif
 
 #endif /* IRREGULARGRID2D_H_ */

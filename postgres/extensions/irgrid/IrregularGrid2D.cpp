@@ -1,5 +1,3 @@
-#include "IrregularGrid2D.h"
-
 #include <iostream>
 #include <map>
 #include <iterator>
@@ -7,6 +5,9 @@
 #include <math.h>
 
 #include <pqxx/pqxx>
+
+#include "IrregularGrid2D.h"
+
 using namespace std;
 using namespace pqxx;
 
